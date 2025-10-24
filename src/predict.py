@@ -1,24 +1,7 @@
 import joblib
-import numpy as np
+import pandas as pd
 
 MODEL_PATH = "models/rf_crop_model.pkl"
-
-def predict_crop(features: dict):
-    """
-    Predict the best crop based on soil & weather features.
-    
-    features: dict with keys 'N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall'
-    Returns: predicted crop label and confidence
-    """
-    model = joblib.load(MODEL_PATH)
-    
-    X = np.array([[features['N'], features['P'], features['K'],
-                   features['temperature'], features['humidity'],
-                   features['ph'], features['rainfall']]])
-    
-    pred = model.predict(X)[0]
-    proba = model.predict_proba(X).max()
-    return pred, proba
 
 crop_dict = {
     0: "rice",
@@ -46,10 +29,17 @@ crop_dict = {
 }
 
 def predict_crop(features: dict):
+    """
+    Predict the best crop based on soil & weather features.
+    features: dict with keys 'N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall'
+    Returns: predicted crop label and confidence
+    """
     model = joblib.load(MODEL_PATH)
-    X = np.array([[features['N'], features['P'], features['K'],
-                   features['temperature'], features['humidity'],
-                   features['ph'], features['rainfall']]])
+    
+    # Convert input dict to DataFrame with exact column names used during training
+    X = pd.DataFrame([features], columns=["N", "P", "K", "temperature", "humidity", "ph", "rainfall"])
+    
     pred = model.predict(X)[0]
     proba = model.predict_proba(X).max()
+    
     return crop_dict[pred], proba
