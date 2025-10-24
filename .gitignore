@@ -1,7 +1,22 @@
+# Python caches
 __pycache__/
 *.pyc
-*.joblib
-.env
+
+# Virtual environment
 venv/
-.DS_Store
+
+# Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+
+# Environment files
+.env
+
+# macOS system files
+.DS_Store
+
+# Ignore large raw datasets (optional)
+data/raw/
+
+# Ignore joblib files **except for models/**  
+*.joblib
+!models/*.pkl
